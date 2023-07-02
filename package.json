@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "water_filter_backend",
   "version": "1.0.0",
   "description": "water_filter project backend",
   "main": "index.js",
