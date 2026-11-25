@@ -1,23 +1,18 @@
 {
-  "name": "water_filter_backend",
-  "version": "1.0.0",
-  "description": "water_filter project backend",
-  "main": "index.js",
+  "name": "filter-project-backend",
+  "version": "2.0.0",
+  "description": "REST API for tracking water filter replacement cycles",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=22.13" },
   "scripts": {
-    "test": "test"
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --watch --env-file-if-exists=.env src/server.js",
+    "test": "node --test"
   },
-  "repository": {
-    "type": "git",
-    "url": "backend"
-  },
-  "keywords": [
-    "backend"
-  ],
-  "author": "slz",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6"
+    "express": "^5.1.0"
   }
 }

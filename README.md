@@ -1,16 +1,50 @@
-# Filter Project Backend
+# 💧 Filter Project — Backend
 
-This repository contains the backend of the Filter Project, a water filter maintenance application built with Node.js and Express.
+REST API that stores the replacement cycle of each cartridge in a home water filter system.
+It works with the **[filter-project](https://github.com/patcont/filter-project)** React frontend.
 
-## Overview
+![Frontend screenshot](docs/screenshot.png)
 
-The backend manages the application's data and provides an API for the frontend to interact with. It's built using Express, with SQLite3 for the database. CORS is implemented for handling cross-origin requests.
+## Tech
 
-To get the full functionality of the application, you'll need to have the frontend running as well. The frontend can be found at this repository: [Filter Project Frontend](https://github.com/patcont/filter-project)
+Node.js 22 · Express 5 · built-in `node:sqlite` (no native modules to compile) · `node:test`
 
-## How to Run
+## Run it locally
 
-1. Clone this repository to your local machine.
-2. In the project directory, install the necessary dependencies with `npm install`.
-3. Start the application with `node app.js`.
-4. The application will be served at `localhost:5000`, and the API can be accessed at `localhost:5000/api`.
+```bash
+cp .env.example .env   # optional: PORT, DB_PATH, CORS_ORIGIN
+npm install
+npm start              # http://localhost:5000
+npm test
+```
+
+The database is created automatically in `data/filters.db` and seeded with a 4-stage system.
+Default lifespans (sediment 180 d, carbon block 180 d, post filter 365 d, RO membrane 730 d) are only
+starting points: change them to what your filter brand recommends.
+
+## API
+
+| Method | Route | Description |
+| --- | --- | --- |
+| `GET` | `/health` | Health check |
+| `GET` | `/filters` | All filters with computed `due_date`, `days_left`, `expired` |
+| `GET` | `/filters/:id` | One filter |
+| `PATCH` | `/filters/:id` | Body: `{ "restart": true }`, `{ "date": "2026-11-01" }` and/or `{ "lifespan_days": 90 }` |
+
+Example:
+
+```bash
+curl -X PATCH localhost:5000/filters/1 \
+  -H "Content-Type: application/json" \
+  -d '{"restart": true}'
+```
+
+## 2026 rebuild
+
+- `node_modules/` (~1,500 files) and the SQLite database are no longer committed
+- `sqlite3` native module replaced with Node's built-in `node:sqlite`; Express 4 → 5, ES modules
+- Fixed startup error when the table already existed; seed data now matches the frontend
+- Each filter has its own `lifespan_days`; status is computed on the server
+- Input validation, 404/400 handling, configurable CORS, graceful shutdown and tests
+
+The original version is preserved in the git history.
